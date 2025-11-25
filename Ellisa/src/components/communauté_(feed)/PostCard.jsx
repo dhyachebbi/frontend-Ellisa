@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 export default function PostCard({ post }) {
     const {
         avatar,
@@ -10,6 +12,14 @@ export default function PostCard({ post }) {
         shares,
     } = post;
 
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(likes);
+
+    const handleLike = () => {
+        setLikeCount(isLiked ? likeCount - 1 : likeCount + 1);
+        setIsLiked(!isLiked);
+    };
+
     return (
         <div className="flex flex-col gap-2 rounded-xl bg-white dark:bg-dark-slate/20 shadow-sm overflow-hidden">
             <div className="p-4 @container">
@@ -17,7 +27,6 @@ export default function PostCard({ post }) {
                     <div className="flex items-center gap-3 mb-3">
                         <div
                             className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-12"
-                            data-alt="User avatar"
                             style={{ backgroundImage: `url("${avatar}")` }}
                         ></div>
                         <div className="flex flex-col">
@@ -35,19 +44,24 @@ export default function PostCard({ post }) {
                     {image && (
                         <div
                             className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl"
-                            data-alt="Post image"
                             style={{ backgroundImage: `url("${image}")` }}
                         ></div>
                     )}
                 </div>
             </div>
             <div className="flex flex-wrap gap-4 px-6 pb-4 pt-2 justify-start border-t border-gray-200 dark:border-gray-700">
-                <button className="flex items-center justify-center gap-2 group">
-                    <span className="material-symbols-outlined text-gray-500 dark:text-gray-400 group-hover:text-red-500">
+                <button onClick={handleLike} className="flex items-center justify-center gap-2 group">
+                    <span
+                        className={`material-symbols-outlined ${isLiked
+                                ? 'text-red-500'
+                                : 'text-gray-500 dark:text-gray-400 group-hover:text-red-500'
+                            }`}
+                        style={{ fontVariationSettings: isLiked ? "'FILL' 1" : "'FILL' 0" }}
+                    >
                         favorite
                     </span>
                     <p className="text-gray-600 dark:text-gray-300 group-hover:text-red-500 text-sm font-bold leading-normal">
-                        {likes}
+                        {likeCount}
                     </p>
                 </button>
                 <button className="flex items-center justify-center gap-2 group">
